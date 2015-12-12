@@ -14,26 +14,19 @@ offset = 30
 board_size = 10
 car_texture = pygame.image.load("Content\car.png").convert()
 entry_tile = build_square_matrix(board_size, offset)
-
+print(entry_tile)
 # Create cars
 car_list = Empty
-car_list = Node(Car(entry_tile.Position.X, entry_tile.Position.Y), car_list)
+car_list = Node(Car(entry_tile), car_list)
 
-def Update(car_list, count):
- 
-  if count % 5 == 0:
-      car_list = Node(Car(entry_tile.Position.X, entry_tile.Position.Y), car_list)
+def Update(car_list):
 
-  # Make the cars move around    
-  if not (car_list.IsEmpty):
-      
-      if(entry_tile.Traverseable):
-          car_list.Value.PosX += entry_tile.Position.X + 1
+  driving_cars = Empty
 
-  #TODO: add the logic of your cars here
-  #HINT For filtering reasons we return a list (of cars?)
-  return car_list
+  while not car_list.IsEmpty:
+      driving_cars = Node(car_list, driving_cars)
 
+  return driving_cars
 
 def Draw(car_list):
 #TODO: add the draw of your cars below
@@ -43,10 +36,11 @@ def Draw(car_list):
 #
   _width = int(offset / 3)
   screen.blit(pygame.transform.scale(car_texture, (_width, _width)), 
-                (_width + car_list.Value.PosX * offset, 
-                _width + car_list.Value.PosY * offset))
-  print(car_list.Value.PosX)
+                (_width + car_list.Value.Position.X * offset, 
+                _width + car_list.Value.Position.Y * offset))
   print("<3")
+  print(car_list.Value.Position.X)
+  print(car_list.Value.Position.Y)
 
 
 
@@ -62,7 +56,7 @@ def Main():
     entry_tile.Draw(screen)
 
     count += 1
-    cars = Update(car_list, count)
+    cars = Update(car_list)
     Draw(cars)
 
     pygame.display.flip()
